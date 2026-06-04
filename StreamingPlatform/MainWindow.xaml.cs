@@ -59,10 +59,12 @@ namespace StreamingPlatform
 
             if (currentTable == "Playlists")
             {
+                var firstUser = db.Users.FirstOrDefault();
+
                 e.NewItem = new Playlist()
                 {
                     PlaylistName = "",
-                    UserID = 1
+                    UserID = firstUser?.UserID ?? 0
                 };
             }
         }
@@ -99,6 +101,8 @@ namespace StreamingPlatform
 
 
 
+
+
         // КНОПКИ МЕНЮ
         private void UsersButton_Click(object sender, RoutedEventArgs e)
         {
@@ -115,31 +119,91 @@ namespace StreamingPlatform
             LoadPlaylists();
         }
 
-        
+        private void StatisticsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var statistics = new[]
+            {
+        new
+        {
+            Показатель = "Пользователи",
+            Значение = db.Users.Count()
+        },
+        new
+        {
+            Показатель = "Треки",
+            Значение = db.Tracks.Count()
+        },
+        new
+        {
+            Показатель = "Плейлисты",
+            Значение = db.Playlists.Count()
+        }
+    };
+
+            MainGrid.ItemsSource = statistics;
+        }
+
+        private void TopTracksButton_Click(object sender, RoutedEventArgs e)
+        {
+            var topTracks = db.Tracks
+                .OrderByDescending(t => t.Duration)
+                .Take(10)
+                .Select(t => new
+                {
+                    Название = t.Title,
+                    Длительность = t.Duration
+                })
+                .ToList();
+
+            MainGrid.ItemsSource = topTracks;
+        }
+
+        private void CountriesButton_Click(object sender, RoutedEventArgs e)
+        {
+            var countries = db.Users
+                .GroupBy(u => u.Country)
+                .Select(g => new
+                {
+                    Страна = g.Key,
+                    Пользователей = g.Count()
+                })
+                .OrderByDescending(x => x.Пользователей)
+                .ToList();
+
+            MainGrid.ItemsSource = countries;
+        }
+
+
 
         // ПОИСК
-        private void SearchBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string search = SearchBox.Text.ToLower();
+            string search = (SearchBox.Text ?? "").ToLower();
 
             if (currentTable == "Users")
             {
                 MainGrid.ItemsSource = db.Users
-                    .Where(x => x.Username.ToLower().Contains(search))
+                    .Where(x => (x.Username ?? "")
+                    .ToLower()
+                    .Contains(search))
                     .ToList();
             }
 
             if (currentTable == "Tracks")
             {
                 MainGrid.ItemsSource = db.Tracks
-                    .Where(x => x.Title.ToLower().Contains(search))
+                    .Where(x => (x.Title ?? "")
+                    .ToLower()
+                    .Contains(search))
                     .ToList();
             }
 
             if (currentTable == "Playlists")
             {
                 MainGrid.ItemsSource = db.Playlists
-                    .Where(x => x.PlaylistName.ToLower().Contains(search))
+                    .Where(x => (x.PlaylistName ?? "")
+                    .ToLower()
+                    .Contains(search))
                     .ToList();
             }
         }
@@ -173,10 +237,18 @@ namespace StreamingPlatform
 
             if (currentTable == "Playlists")
             {
+                var firstUser = db.Users.FirstOrDefault();
+
+                if (firstUser == null)
+                {
+                    MessageBox.Show("Сначала создайте пользователя.");
+                    return;
+                }
+
                 Playlist playlist = new Playlist()
                 {
                     PlaylistName = "New Playlist",
-                    UserID = 1
+                    UserID = firstUser.UserID
                 };
 
                 db.Playlists.Add(playlist);
@@ -189,41 +261,51 @@ namespace StreamingPlatform
         // УДАЛЕНИЕ
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.SelectedItem == null)
-                return;
-
-            if (currentTable == "Users")
+            try
             {
-                User user = MainGrid.SelectedItem as User;
+                if (MainGrid.SelectedItem == null)
+                    return;
 
-                if (user != null)
+                if (currentTable == "Users")
                 {
-                    db.Users.Remove(user);
-                }
-            }
+                    User user = MainGrid.SelectedItem as User;
 
-            if (currentTable == "Tracks")
+                    if (user != null)
+                    {
+                        //db.Users.Attach(user);
+                        db.Users.Remove(user);
+                    }
+                }
+
+                if (currentTable == "Tracks")
+                {
+                    Track track = MainGrid.SelectedItem as Track;
+
+                    if (track != null)
+                    {
+                        //db.Tracks.Attach(track);
+                        db.Tracks.Remove(track);
+                    }
+                }
+
+                if (currentTable == "Playlists")
+                {
+                    Playlist playlist = MainGrid.SelectedItem as Playlist;
+
+                    if (playlist != null)
+                    {
+                        //db.Playlists.Attach(playlist);
+                        db.Playlists.Remove(playlist);
+                    }
+                }
+
+                db.SaveChanges();
+                RefreshData();
+            }
+            catch (Exception ex)
             {
-                Track track = MainGrid.SelectedItem as Track;
-
-                if (track != null)
-                {
-                    db.Tracks.Remove(track);
-                }
+                MessageBox.Show(ex.Message);
             }
-
-            if (currentTable == "Playlists")
-            {
-                Playlist playlist = MainGrid.SelectedItem as Playlist;
-
-                if (playlist != null)
-                {
-                    db.Playlists.Remove(playlist);
-                }
-            }
-
-            db.SaveChanges();
-            RefreshData();
         }
 
         // ОБНОВЛЕНИЕ
@@ -236,52 +318,9 @@ namespace StreamingPlatform
         {
             try
             {
-                if (currentTable == "Users")
-                {
-                    foreach (var user in users)
-                    {
-                        if (user.UserID == null)
-                        {
-                            db.Users.Add(user);
-                        }
-                        else
-                        {
-                            db.Users.Update(user);
-                        }
-                    }
-                }
-
-                if (currentTable == "Tracks")
-                {
-                    foreach (var track in tracks)
-                    {
-                        if (track.TrackID == 0)
-                        {
-                            db.Tracks.Add(track);
-                        }
-                        else
-                        {
-                            db.Tracks.Update(track);
-                        }
-                    }
-                }
-
-                if (currentTable == "Playlists")
-                {
-                    foreach (var playlist in playlists)
-                    {
-                        if (playlist.PlaylistID == null)
-                        {
-                            db.Playlists.Add(playlist);
-                        }
-                        else
-                        {
-                            db.Playlists.Update(playlist);
-                        }
-                    }
-                }
-
                 db.SaveChanges();
+
+                RefreshData();
 
                 MessageBox.Show("Изменения сохранены!");
             }
@@ -303,51 +342,13 @@ namespace StreamingPlatform
                 LoadPlaylists();
 
         }
-        private void MainGrid_RowEditEnding(object sender,
+        private void MainGrid_RowEditEnding(
+    object sender,
     DataGridRowEditEndingEventArgs e)
         {
-            try
-            {
-                if (e.EditAction == DataGridEditAction.Commit)
-                {
-                    if (currentTable == "Users")
-                    {
-                        User user = e.Row.Item as User;
-
-                        if (user != null &&
-                            user.UserID == null)
-                        {
-                            db.Users.Add(user);
-                        }
-                    }
-
-                    if (currentTable == "Tracks")
-                    {
-                        Track track = e.Row.Item as Track;
-
-                        if (track != null &&
-                            track.TrackID == 0)
-                        {
-                            db.Tracks.Add(track);
-                        }
-                    }
-
-                    if (currentTable == "Playlists")
-                    {
-                        Playlist playlist = e.Row.Item as Playlist;
-
-                        if (playlist != null &&
-                            playlist.PlaylistID == null)
-                        {
-                            db.Playlists.Add(playlist);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            // Убрано намеренно.
+            // EF Core сам отслеживает изменения объектов,
+            // загруженных из контекста.
         }
     }
 }

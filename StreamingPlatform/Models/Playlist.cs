@@ -11,7 +11,7 @@ namespace StreamingPlatform.Models
     public class Playlist
     {
         [Key]
-        public int? PlaylistID { get; set; }
+        public int PlaylistID { get; set; }
 
         public string? PlaylistName { get; set; }
 
@@ -20,6 +20,6 @@ namespace StreamingPlatform.Models
         [ForeignKey("User")]
         public int UserID { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }

@@ -21,8 +21,8 @@ namespace StreamingPlatform.Models
 
         public DateTime AddedDate { get; set; }
 
-        public Playlist Playlist { get; set; }
+        public Playlist? Playlist { get; set; }
 
-        public Track Track { get; set; }
+        public Track? Track { get; set; }
     }
 }

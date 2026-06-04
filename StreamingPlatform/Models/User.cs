@@ -11,7 +11,7 @@ namespace StreamingPlatform.Models
     public class User
     {
         [Key]
-        public int? UserID { get; set; }
+        public int UserID { get; set; }
 
         public string? Username { get; set; }
 

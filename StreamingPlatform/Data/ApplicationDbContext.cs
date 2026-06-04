@@ -24,5 +24,26 @@ namespace StreamingPlatform.Data
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\MSSQLLocalDB;Database=StreamingPlatformDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Playlist>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PlaylistTrack>()
+                .HasOne(pt => pt.Playlist)
+                .WithMany()
+                .HasForeignKey(pt => pt.PlaylistID);
+
+            modelBuilder.Entity<PlaylistTrack>()
+                .HasOne(pt => pt.Track)
+                .WithMany()
+                .HasForeignKey(pt => pt.TrackID);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
