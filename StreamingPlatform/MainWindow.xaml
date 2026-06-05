@@ -183,7 +183,7 @@
 
                         <StackPanel Orientation="Horizontal">
 
-                            <Image Source="Assets/statistics.png"
+                            <Image Source="/Assets/statistics.png"
                                 Width="24"
                                 Height="24"
                                 Margin="10,0,0,0"/>
@@ -206,7 +206,7 @@
 
                         <StackPanel Orientation="Horizontal">
 
-                            <Image Source="Assets/catmusic.png"
+                            <Image Source="/Assets/region.png"
                                 Width="24"
                                 Height="24"
                                 Margin="10,0,0,0"/>
@@ -351,7 +351,8 @@
                               CanUserDeleteRows="True"
                               IsReadOnly="False"
                               RowEditEnding="MainGrid_RowEditEnding"
-                              AddingNewItem="MainGrid_AddingNewItem">
+                              AddingNewItem="MainGrid_AddingNewItem"
+                              AutoGeneratingColumn="MainGrid_AutoGeneratingColumn">
 
                         <!-- ЗАГОЛОВКИ -->
                         <DataGrid.ColumnHeaderStyle>

@@ -14,6 +14,8 @@
     <None Remove="Assets\icon.png" />
     <None Remove="Assets\music.png" />
     <None Remove="Assets\playlist.png" />
+    <None Remove="Assets\region.png" />
+    <None Remove="Assets\statistics.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +32,8 @@
     <Resource Include="Assets\icon.png" />
     <Resource Include="Assets\music.png" />
     <Resource Include="Assets\playlist.png" />
+    <Resource Include="Assets\region.png" />
+    <Resource Include="Assets\statistics.png" />
   </ItemGroup>
 
 </Project>

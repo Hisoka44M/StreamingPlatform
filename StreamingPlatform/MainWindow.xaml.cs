@@ -19,6 +19,37 @@ namespace StreamingPlatform
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly List<string> countries = new()
+        {
+            "Japan",
+            "Germany",
+            "France",
+            "Italy",
+            "Spain",
+            "Poland",
+            "Russia",
+            "China",
+            "USA",
+            "Canada",
+            "United Kingdom"
+        };
+
+        private void MainGrid_AutoGeneratingColumn(object sender,DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (currentTable == "Users" &&
+                e.PropertyName == "Country")
+            {
+                var comboColumn = new DataGridComboBoxColumn
+                {
+                    Header = "Country",
+                    SelectedItemBinding = new Binding("Country"),
+                    ItemsSource = countries
+                };
+
+                e.Column = comboColumn;
+            }
+        }
+
         ApplicationDbContext db = new ApplicationDbContext();
         private List<User> users;
         private List<Track> tracks;
@@ -73,6 +104,7 @@ namespace StreamingPlatform
         private void LoadUsers()
         {
             currentTable = "Users";
+            MainGrid.Columns.Clear();
 
             users = db.Users.ToList();
 
