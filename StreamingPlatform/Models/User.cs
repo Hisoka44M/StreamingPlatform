@@ -12,17 +12,15 @@ namespace StreamingPlatform.Models
     {
         [Key]
         public int UserID { get; set; }
-
         public string? Username { get; set; }
-
         public string? Email { get; set; }
-
         public string? PasswordHash { get; set; }
-
         public DateTime? RegistrationDate { get; set; }
-
         public string? Country { get; set; }
 
-            
+        public int? SubscriptionID { get; set; }
+
+        [ForeignKey("SubscriptionID")]
+        public Subscription? Subscription { get; set; }
     }
 }

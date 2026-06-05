@@ -1,0 +1,80 @@
+﻿<Window x:Class="StreamingPlatform.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StreamingPlatform"
+        mc:Ignorable="d"
+        Title="StreamingPlatform" Height="420" Width="420"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Background="#121212">
+    <Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Лого -->
+        <TextBlock Grid.Row="0" Text="🎵 StreamingPlatform"
+                   FontSize="24" FontWeight="Bold" Foreground="#1DB954"
+                   HorizontalAlignment="Center"/>
+
+        <!-- Переключатель Вход / Регистрация -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <Button x:Name="TabLogin" Content="Вход" Width="120" Height="32"
+                    Background="#1DB954" Foreground="White" FontWeight="Bold"
+                    BorderThickness="0" Click="TabLogin_Click"/>
+            <Button x:Name="TabRegister" Content="Регистрация" Width="140" Height="32"
+                    Background="#2a2a2a" Foreground="#aaaaaa" FontWeight="Bold"
+                    BorderThickness="0" Margin="8,0,0,0" Click="TabRegister_Click"/>
+        </StackPanel>
+
+        <!-- Поля -->
+        <StackPanel Grid.Row="3" x:Name="FieldUsername">
+            <TextBlock Text="Логин" Foreground="#aaaaaa" FontSize="11" Margin="0,0,0,4"/>
+            <TextBox x:Name="UsernameBox" Height="34" Padding="8,6"
+                     Background="#2a2a2a" Foreground="White" BorderBrush="#444"
+                     CaretBrush="White"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" x:Name="FieldEmail" Margin="0,10,0,0" Visibility="Collapsed">
+            <TextBlock Text="Email" Foreground="#aaaaaa" FontSize="11" Margin="0,0,0,4"/>
+            <TextBox x:Name="EmailBox" Height="34" Padding="8,6"
+                     Background="#2a2a2a" Foreground="White" BorderBrush="#444"
+                     CaretBrush="White"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="5" Margin="0,10,0,0">
+            <TextBlock Text="Пароль" Foreground="#aaaaaa" FontSize="11" Margin="0,0,0,4"/>
+            <PasswordBox x:Name="PasswordBox" Height="34" Padding="8,6"
+                         Background="#2a2a2a" Foreground="White" BorderBrush="#444"/>
+        </StackPanel>
+
+        <!-- Ошибка -->
+        <TextBlock Grid.Row="7" x:Name="ErrorText" Foreground="#ff6b6b"
+                   FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+
+        <!-- Кнопка действия -->
+        <Button Grid.Row="9" x:Name="ActionButton"
+                Content="Войти" Height="38"
+                Background="#1DB954" Foreground="White"
+                FontSize="14" FontWeight="Bold" BorderThickness="0"
+                Click="ActionButton_Click"/>
+
+        <!-- Подсказка -->
+        <TextBlock Grid.Row="11" x:Name="HintText"
+                   Text="Нет аккаунта? Нажмите «Регистрация»"
+                   Foreground="#666" FontSize="11"
+                   HorizontalAlignment="Center"/>
+    </Grid>
+</Window>

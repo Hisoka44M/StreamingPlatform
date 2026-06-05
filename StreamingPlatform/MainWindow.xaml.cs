@@ -78,6 +78,12 @@ namespace StreamingPlatform
             LoadUsers();
         }
 
+        public MainWindow(Models.User currentUser) : this()
+        {
+            // Конструктор для входа через авторизацию
+            // this() вызывает основной конструктор выше — всё загружается как обычно
+        }
+
         private void MainGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
         {
             if (currentTable == "Users")

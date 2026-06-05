@@ -12,11 +12,9 @@ namespace StreamingPlatform.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Track> Tracks { get; set; }
-
         public DbSet<Playlist> Playlists { get; set; }
-
         public DbSet<PlaylistTrack> PlaylistTracks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,6 +25,12 @@ namespace StreamingPlatform.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Subscription)
+                .WithMany()
+                .HasForeignKey(u => u.SubscriptionID)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Playlist>()
                 .HasOne(p => p.User)
                 .WithMany()
