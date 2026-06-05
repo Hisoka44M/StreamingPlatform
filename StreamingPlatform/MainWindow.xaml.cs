@@ -2,6 +2,7 @@
 using StreamingPlatform.Models;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 
 namespace StreamingPlatform
 {
@@ -34,8 +36,18 @@ namespace StreamingPlatform
             "United Kingdom"
         };
 
-        private void MainGrid_AutoGeneratingColumn(object sender,DataGridAutoGeneratingColumnEventArgs e)
+        private void MainGrid_AutoGeneratingColumn(
+    object sender,
+    DataGridAutoGeneratingColumnEventArgs e)
         {
+            // Скрываем навигационное свойство User
+            if (e.PropertyName == "User")
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            // Делаем Country выпадающим списком
             if (currentTable == "Users" &&
                 e.PropertyName == "Country")
             {
@@ -337,6 +349,39 @@ namespace StreamingPlatform
         {
             try
             {
+                // Проверка на одинаковые Username
+                bool duplicateUsers = db.Users
+                    .GroupBy(x => x.Username)
+                    .Any(g => g.Count() > 1);
+
+                if (duplicateUsers)
+                {
+                    MessageBox.Show(
+                        "Обнаружены пользователи с одинаковым Username.");
+                    return;
+                }
+
+                // Проверка Email
+                foreach (var user in db.Users)
+                {
+                    if (string.IsNullOrWhiteSpace(user.Email))
+                    {
+                        MessageBox.Show("Email не может быть пустым.");
+                        return;
+                    }
+
+                    bool validEmail = Regex.IsMatch(
+                        user.Email,
+                        @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+                    if (!validEmail)
+                    {
+                        MessageBox.Show(
+                            $"Некорректный email: {user.Email}");
+                        return;
+                    }
+                }
+
                 db.SaveChanges();
 
                 RefreshData();
