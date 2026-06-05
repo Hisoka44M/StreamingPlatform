@@ -143,20 +143,6 @@ namespace StreamingPlatform
             MainGrid.ItemsSource = statistics;
         }
 
-        private void TopTracksButton_Click(object sender, RoutedEventArgs e)
-        {
-            var topTracks = db.Tracks
-                .OrderByDescending(t => t.Duration)
-                .Take(10)
-                .Select(t => new
-                {
-                    Название = t.Title,
-                    Длительность = t.Duration
-                })
-                .ToList();
-
-            MainGrid.ItemsSource = topTracks;
-        }
 
         private void CountriesButton_Click(object sender, RoutedEventArgs e)
         {
@@ -229,7 +215,8 @@ namespace StreamingPlatform
                 Track track = new Track()
                 {
                     Title = "New Track",
-                    Duration = 180
+                    Duration = 180,
+           
                 };
 
                 db.Tracks.Add(track);

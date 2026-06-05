@@ -18,7 +18,5 @@ namespace StreamingPlatform.Models
         public int? Duration { get; set; }
 
         public DateTime? ReleaseDate { get; set; }
-
-        
     }
 }

@@ -197,29 +197,6 @@
 
                     </Button>
 
-                    <Button x:Name="TopTracksButton"
-                        Height="55"
-                        Margin="5"
-                        Background="#282828"
-                        Foreground="White"
-                        Click="TopTracksButton_Click">
-
-                        <StackPanel Orientation="Horizontal">
-
-                            <Image Source="Assets/music.png"
-                                Width="24"
-                                Height="24"
-                                Margin="10,0,0,0"/>
-
-                            <TextBlock Text="Топ треков"
-                                FontSize="16"
-                                Margin="15,0,0,0"
-                                VerticalAlignment="Center"/>
-
-                        </StackPanel>
-
-                    </Button>
-
                     <Button x:Name="CountriesButton"
                     Height="55"
                     Margin="5"
